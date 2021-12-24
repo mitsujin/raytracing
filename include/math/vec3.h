@@ -1,3 +1,6 @@
+#ifndef VEC3_H
+#define VEC3_H
+
 #include <math.h>
 #include <stdlib.h>
 #include <iostream>
@@ -24,6 +27,11 @@ namespace RT
         inline Vec3 operator-() const { return Vec3(-m_x, -m_y, -m_z); }
 
         inline T operator[] (int i) const { return m_data[i]; }
+
+        inline Vec3<T> operator+(const Vec3& o)
+        {
+            return Vec3(m_x + o.m_x, m_y + o.m_y, m_z + o.m_z);
+        }
 
         inline Vec3& operator += (const Vec3& o)
         {
@@ -68,6 +76,10 @@ namespace RT
             return *this;
         }
 
+        inline Vec3 operator-(Vec3 o) const { return Vec3(m_x-o.m_x, m_y-o.m_y, m_z-o.m_z); }
+        inline Vec3 operator*(T t) const { return Vec3(m_x*t, m_y*t, m_z*t); }
+        inline Vec3 operator/(T t) const { return Vec3(m_x/t, m_y/t, m_z/t); }
+
         inline T Length() const
         {
             return sqrt(m_x * m_x + m_y * m_y + m_z * m_z);
@@ -77,6 +89,17 @@ namespace RT
         {
             return m_x * m_x + m_y * m_y + m_z * m_z;
         }
+
+        inline Vec3<T> Normalize() const
+        {
+            return *this / Length();
+        }
+
+        template <typename U>
+        friend Vec3<U> operator * (U t, Vec3<U> o);
+
+        template <typename U>
+        friend U Dot(const Vec3<U>& a, const Vec3<U>& b);
 
     private:
         union
@@ -97,6 +120,27 @@ namespace RT
         };
     };
 
+    /*
+    template <typename T>
+    inline Vec3<T> operator + (const Vec3<T>& a, const Vec3<T>& b)
+    {
+        return Vec3<T>(m_x + b.m_x, m_y + b.m_y, m_z + b.m_z);
+    }
+    */
+    template <typename T>
+    Vec3<T> operator * (T t, Vec3<T> o)
+    {
+        return Vec3<T>(t*o.m_x, t*o.m_y, t*o.m_z);
+    }
+
+    template <typename T>
+    T Dot(const Vec3<T>& a, const Vec3<T>& b)
+    {
+        return a.m_x * b.m_x + a.m_y*b.m_y + a.m_z*b.m_z;
+    }
+
     using Float3 = Vec3<float>;
     using Double3 = Vec3<double>;
 }
+
+#endif /* VEC3_H */
