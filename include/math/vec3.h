@@ -28,7 +28,7 @@ namespace RT
 
         inline T operator[] (int i) const { return m_data[i]; }
 
-        inline Vec3<T> operator+(const Vec3& o)
+        inline Vec3<T> operator+(const Vec3& o) const
         {
             return Vec3(m_x + o.m_x, m_y + o.m_y, m_z + o.m_z);
         }
