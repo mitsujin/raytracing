@@ -7,6 +7,7 @@
 #include <hitable_list.h>
 #include <sphere.h>
 #include <limits>
+#include <camera.h>
 
 using namespace RT;
 using Vector3 = RT::Float3;
@@ -43,13 +44,15 @@ int main()
     hList[1] = new Sphere(Vector3(0.0, -100.5, -1.0f), 100);
     Hitable* world = new HitableList(hList, 2);
 
+    Camera cam;
+
     for(int j = ny-1; j >= 0; j--)
     {
         for (int i = 0; i < nx; i++)
         {
             float u = float(i) / float(nx);
             float v = float(j) / float(ny);
-            Ray r(origin, lowerLeftCorner + u*horizontal + v*vertical);
+            auto r = cam.GetRay(u, v);
             Vector3 col = Color(r, world);
             int ir = int(255.99*col.r());
             int ig = int(255.99*col.g());
