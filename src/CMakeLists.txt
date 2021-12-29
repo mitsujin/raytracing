@@ -4,6 +4,8 @@ set (SOURCE
     main.cpp
     sphere.cpp
     hitable_list.cpp
+    metal.cpp
+    lambertian.cpp
 )
 
 add_executable(${BINARY} ${SOURCE})

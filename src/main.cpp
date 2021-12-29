@@ -9,31 +9,28 @@
 #include <limits>
 #include <camera.h>
 #include <random>
-#include <random_gen.h>
+#include <material.h>
+#include <lambertian.h>
+#include <metal.h>
 
 using namespace RT;
 using Vector3 = RT::Float3;
 
-Vector3 RandomInUnitSphere()
-{
-    auto& gen = RandomGen<Float>::Inst();
-    while (true)
-    {
-        Vector3 pt(gen(-1.0f, 1.0f), gen(-1.0f, 1.0f), gen(-1.0f, 1.0f));
-        if (pt.LengthSq() < 1)
-        {
-            return pt;
-        }
-    }
-}
-
-Vector3 Color(const Ray& r, Hitable* world)
+Vector3 Color(const Ray& r, Hitable* world, int depth)
 {
     HitRecord rec;
     if (world->Hit(r, 0.001, std::numeric_limits<Float>::max(), rec))
     {
-        Vector3 target = rec.P + rec.Normal + RandomInUnitSphere();
-        return 0.5f * Color(Ray(rec.P, target - rec.P), world);
+        Ray scattered;
+        Vector3 attenuation;
+        if (depth < 50 && rec.Mat->Scatter(r, rec, attenuation, scattered))
+        {
+            return attenuation * Color(scattered, world, depth+1);
+        }
+        else
+        {
+            return Vector3();
+        }
     }
     else
     {
@@ -53,10 +50,11 @@ int main()
     Vector3 vertical(0.0f, 2.0f, 0.0f);
     Vector3 origin(0.0f, 0.0f, 0.0f);
 
-    Hitable* hList[2];
-    hList[0] = new Sphere(Vector3(0.0, 0.0, -1.0f), 0.5f);
-    hList[1] = new Sphere(Vector3(0.0, -100.5, -1.0f), 100);
-    Hitable* world = new HitableList(hList, 2);
+    HitableList world;
+    world.Register(std::make_unique<Sphere>(Vector3(0.0, 0.0, -1.0f), 0.5f, std::make_unique<Lambertian>(Vector3(0.8, 0.3, 0.3))));
+    world.Register(std::make_unique<Sphere>(Vector3(0.0, -100.5, -1.0f), 100, std::make_unique<Lambertian>(Vector3(0.8, 0.8, 0.0))));
+    world.Register(std::make_unique<Sphere>(Vector3(1.0, 0.0, -1.0f), 0.5f, std::make_unique<Metal>(Vector3(0.8, 0.6, 0.2))));
+    world.Register(std::make_unique<Sphere>(Vector3(-1.0, 0.0, -1.0f), 0.5f, std::make_unique<Metal>(Vector3(0.8, 0.8, 0.8))));
 
     Camera cam;
     std::random_device rd;
@@ -73,7 +71,7 @@ int main()
                 float u = float(i + dist(mt)) / float(nx);
                 float v = float(j + dist(mt)) / float(ny);
                 auto r = cam.GetRay(u, v);
-                col += Color(r, world);
+                col += Color(r, &world, 0);
             }
             col /= float(ns);
             col = Vector3(sqrt(col[0]), sqrt(col[1]), sqrt(col[2]));

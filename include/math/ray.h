@@ -9,6 +9,9 @@ namespace RT
     class Ray_t
     {
     public:
+
+        Ray_t() = default;
+
         Ray_t(const Vec3<T> a, const Vec3<T>& b)
         : m_a(a), m_b(b)
         {
@@ -20,8 +23,8 @@ namespace RT
         Vec3<T> PointAtParameter(T t) const { return m_a + t*m_b; }
 
     private:
-        Vec3<T> m_a;
-        Vec3<T> m_b;
+        Vec3<T> m_a{};
+        Vec3<T> m_b{};
     };
 
     using Ray = Ray_t<float>;

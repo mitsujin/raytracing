@@ -2,20 +2,23 @@
 #define HITABLE_LIST_H
 
 #include "hitable.h"
+#include <vector>
+#include <memory>
 
 namespace RT
 {
     class HitableList : public Hitable
     {
     public:
-        HitableList(Hitable** l, int n)
-        : m_list(l), m_size(n) {}
+        void Register(std::unique_ptr<Hitable> hitable)
+        {
+            m_list.push_back(std::move(hitable));
+        }
 
         bool Hit(const Ray_t<Float>& r, Float t_min, Float t_max, HitRecord& rec) const override;
 
     private:
-        Hitable** m_list;
-        int m_size;
+        std::vector<std::unique_ptr<Hitable>> m_list;
     };
 }
 

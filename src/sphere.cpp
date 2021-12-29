@@ -2,6 +2,7 @@
 
 #include <math/vec3.h>
 #include <math/ray.h>
+#include <material.h>
 
 namespace RT
 {
@@ -23,6 +24,7 @@ namespace RT
                 rec.T = temp;
                 rec.P = r.PointAtParameter(rec.T);
                 rec.Normal = (rec.P - m_center) / m_radius;
+                rec.Mat = m_material.get();
                 return true;
             }
             temp = (-b + sqrtDet) /a;
@@ -31,6 +33,7 @@ namespace RT
                 rec.T = temp;
                 rec.P = r.PointAtParameter(rec.T);
                 rec.Normal = (rec.P - m_center) / m_radius;
+                rec.Mat = m_material.get();
                 return true;
             }
         }

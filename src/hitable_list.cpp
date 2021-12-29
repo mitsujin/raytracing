@@ -10,9 +10,9 @@ namespace RT
         HitRecord temp;
         bool hit = false;
         Float closestSoFar = t_max;
-        for (int i = 0; i < m_size; i++)
+        for (auto& h : m_list)
         {
-            if (m_list[i]->Hit(r, t_min, closestSoFar, temp))
+            if (h->Hit(r, t_min, closestSoFar, temp))
             {
                 hit = true;
                 closestSoFar = temp.T;

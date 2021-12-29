@@ -19,8 +19,7 @@ namespace RT
 
         inline T x() const { return m_x; }
         inline T y() const { return m_y; }
-        inline T z() const { return m_z; }
-        inline T r() const { return m_x; }
+        inline T z() const { return m_z; } inline T r() const { return m_x; }
         inline T g() const { return m_y; }
         inline T b() const { return m_z; }
 
@@ -101,6 +100,9 @@ namespace RT
         template <typename U>
         friend U Dot(const Vec3<U>& a, const Vec3<U>& b);
 
+        template <typename U>
+        friend Vec3<U> operator * (Vec3<U> a, Vec3<U> b);
+
     private:
         union
         {
@@ -131,6 +133,12 @@ namespace RT
     Vec3<T> operator * (T t, Vec3<T> o)
     {
         return Vec3<T>(t*o.m_x, t*o.m_y, t*o.m_z);
+    }
+    
+    template <typename T>
+    Vec3<T> operator * (Vec3<T> a, Vec3<T> b)
+    {
+        return Vec3<T>(a.m_x*b.m_x, a.m_y*b.m_y, a.m_z*b.m_z);
     }
 
     template <typename T>
