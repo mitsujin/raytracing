@@ -9,20 +9,17 @@
 #include <limits>
 #include <camera.h>
 #include <random>
+#include <random_gen.h>
 
 using namespace RT;
 using Vector3 = RT::Float3;
 
-std::random_device g_rd;
-std::minstd_rand g_mt(g_rd());
-std::uniform_real_distribution<Float> g_dist(-1.0f, 1.0f);
-
-
 Vector3 RandomInUnitSphere()
 {
+    auto& gen = RandomGen<Float>::Inst();
     while (true)
     {
-        Vector3 pt(g_dist(g_mt), g_dist(g_mt), g_dist(g_mt));
+        Vector3 pt(gen(-1.0f, 1.0f), gen(-1.0f, 1.0f), gen(-1.0f, 1.0f));
         if (pt.LengthSq() < 1)
         {
             return pt;
