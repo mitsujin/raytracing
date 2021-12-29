@@ -33,7 +33,7 @@ Vector3 RandomInUnitSphere()
 Vector3 Color(const Ray& r, Hitable* world)
 {
     HitRecord rec;
-    if (world->Hit(r, 0.0, std::numeric_limits<Float>::max(), rec))
+    if (world->Hit(r, 0.001, std::numeric_limits<Float>::max(), rec))
     {
         Vector3 target = rec.P + rec.Normal + RandomInUnitSphere();
         return 0.5f * Color(Ray(rec.P, target - rec.P), world);
@@ -79,6 +79,7 @@ int main()
                 col += Color(r, world);
             }
             col /= float(ns);
+            col = Vector3(sqrt(col[0]), sqrt(col[1]), sqrt(col[2]));
             int ir = int(255.99*col.r());
             int ig = int(255.99*col.g());
             int ib = int(255.99*col.b());
