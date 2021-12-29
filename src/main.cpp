@@ -13,13 +13,30 @@
 using namespace RT;
 using Vector3 = RT::Float3;
 
+std::random_device g_rd;
+std::minstd_rand g_mt(g_rd());
+std::uniform_real_distribution<Float> g_dist(-1.0f, 1.0f);
+
+
+Vector3 RandomInUnitSphere()
+{
+    while (true)
+    {
+        Vector3 pt(g_dist(g_mt), g_dist(g_mt), g_dist(g_mt));
+        if (pt.LengthSq() < 1)
+        {
+            return pt;
+        }
+    }
+}
+
 Vector3 Color(const Ray& r, Hitable* world)
 {
     HitRecord rec;
     if (world->Hit(r, 0.0, std::numeric_limits<Float>::max(), rec))
     {
-        auto& N = rec.Normal;
-        return 0.5f * Vector3(N.x()+1, N.y()+1, N.z()+1);
+        Vector3 target = rec.P + rec.Normal + RandomInUnitSphere();
+        return 0.5f * Color(Ray(rec.P, target - rec.P), world);
     }
     else
     {
