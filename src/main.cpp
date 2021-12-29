@@ -8,6 +8,7 @@
 #include <sphere.h>
 #include <limits>
 #include <camera.h>
+#include <random>
 
 using namespace RT;
 using Vector3 = RT::Float3;
@@ -32,10 +33,9 @@ int main()
 {
     int nx = 200;
     int ny = 100;
+    int ns = 100;
 
     std::cout << "P3\n" << nx << " " << ny << "\n255\n";
-    Vector3 lowerLeftCorner(-2.0f, -1.0f, -1.0f);
-    Vector3 horizontal(4.0f, 0.0f, 0.0f);
     Vector3 vertical(0.0f, 2.0f, 0.0f);
     Vector3 origin(0.0f, 0.0f, 0.0f);
 
@@ -45,15 +45,23 @@ int main()
     Hitable* world = new HitableList(hList, 2);
 
     Camera cam;
+    std::random_device rd;
+    std::mt19937 mt(rd());
+    std::uniform_real_distribution<Float> dist(0.0f, 1.0f);
 
     for(int j = ny-1; j >= 0; j--)
     {
         for (int i = 0; i < nx; i++)
         {
-            float u = float(i) / float(nx);
-            float v = float(j) / float(ny);
-            auto r = cam.GetRay(u, v);
-            Vector3 col = Color(r, world);
+            Vector3 col;
+            for (int s=0; s < ns; s++)
+            {
+                float u = float(i + dist(mt)) / float(nx);
+                float v = float(j + dist(mt)) / float(ny);
+                auto r = cam.GetRay(u, v);
+                col += Color(r, world);
+            }
+            col /= float(ns);
             int ir = int(255.99*col.r());
             int ig = int(255.99*col.g());
             int ib = int(255.99*col.b());
