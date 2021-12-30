@@ -3,21 +3,11 @@
 
 #include <random_gen.h>
 #include <math/vec3.h>
+#include <float_def.h>
 
 namespace RT
 {
-    Vec3<Float> RandomInUnitSphere()
-    {
-        auto& gen = RandomGen<Float>::Inst();
-        while (true)
-        {
-            Vec3<Float> pt(gen(-1.0f, 1.0f), gen(-1.0f, 1.0f), gen(-1.0f, 1.0f));
-            if (pt.LengthSq() < 1)
-            {
-                return pt;
-            }
-        }
-    }
+    Vec3<Float> RandomInUnitSphere();
 }
 
 #endif /* RANDOM_UTILS_H */

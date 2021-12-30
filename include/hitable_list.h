@@ -10,7 +10,7 @@ namespace RT
     class HitableList : public Hitable
     {
     public:
-        void Register(std::unique_ptr<Hitable> hitable)
+        void Add(std::unique_ptr<Hitable> hitable)
         {
             m_list.push_back(std::move(hitable));
         }
