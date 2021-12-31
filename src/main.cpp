@@ -11,6 +11,7 @@
 #include <random>
 #include <material.h>
 #include <lambertian.h>
+#include <dielectric.h>
 #include <metal.h>
 
 using namespace RT;
@@ -54,7 +55,7 @@ int main()
     world.Add(std::make_unique<Sphere>(Vector3(0.0, 0.0, -1.0f), 0.5f, std::make_unique<Lambertian>(Vector3(0.8, 0.3, 0.3))));
     world.Add(std::make_unique<Sphere>(Vector3(0.0, -100.5, -1.0f), 100, std::make_unique<Lambertian>(Vector3(0.8, 0.8, 0.0))));
     world.Add(std::make_unique<Sphere>(Vector3(1.0, 0.0, -1.0f), 0.5f, std::make_unique<Metal>(Vector3(0.8, 0.6, 0.2), 0.3)));
-    world.Add(std::make_unique<Sphere>(Vector3(-1.0, 0.0, -1.0f), 0.5f, std::make_unique<Metal>(Vector3(0.8, 0.8, 0.8), 1.0)));
+    world.Add(std::make_unique<Sphere>(Vector3(-1.0, 0.0, -1.0f), 0.5f, std::make_unique<Dielectric>(1.5f)));
 
     Camera cam;
     std::random_device rd;

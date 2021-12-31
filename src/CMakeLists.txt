@@ -6,6 +6,7 @@ set (SOURCE
     hitable_list.cpp
     metal.cpp
     lambertian.cpp
+    dielectric.cpp
     random_utils.cpp
 )
 
