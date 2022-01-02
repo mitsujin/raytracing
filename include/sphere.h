@@ -2,6 +2,7 @@
 #define SPHERE_H
 
 #include "hitable.h"
+#include <memory>
 
 namespace RT
 {
