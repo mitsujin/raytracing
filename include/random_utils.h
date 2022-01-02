@@ -8,6 +8,7 @@
 namespace RT
 {
     Vec3<Float> RandomInUnitSphere();
+    Vec3<Float> RandomInUnitDisk();
 }
 
 #endif /* RANDOM_UTILS_H */

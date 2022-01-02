@@ -101,6 +101,9 @@ namespace RT
         friend U Dot(const Vec3<U>& a, const Vec3<U>& b);
 
         template <typename U>
+        friend Vec3<U> Cross(const Vec3<U>& a, const Vec3<U>& b);
+
+        template <typename U>
         friend Vec3<U> operator * (Vec3<U> a, Vec3<U> b);
 
     private:
@@ -145,6 +148,15 @@ namespace RT
     T Dot(const Vec3<T>& a, const Vec3<T>& b)
     {
         return a.m_x * b.m_x + a.m_y*b.m_y + a.m_z*b.m_z;
+    }
+
+    template <typename T>
+    Vec3<T> Cross(const Vec3<T>& a, const Vec3<T>& b)
+    {
+        return Vec3<T>(
+            (a.m_y * b.m_z - a.m_z * b.m_y), 
+            (-(a.m_x*b.m_z - a.m_z * b.m_x)),
+            (a.m_x*b.m_y - a.m_y*b.m_x));
     }
 
     using Float3 = Vec3<float>;

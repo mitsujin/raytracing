@@ -10,15 +10,15 @@ namespace RT
     class Sphere: public Hitable
     {
     public:
-        Sphere(Vec3<Float> cen, Float r, std::unique_ptr<Material> mat)
-        : m_center(cen), m_radius(r), m_material(std::move(mat)) {}
+        Sphere(Vec3<Float> cen, Float r, std::shared_ptr<Material> mat)
+        : m_center(cen), m_radius(r), m_material(mat) {}
 
         bool Hit(const Ray_t<Float>& r, Float t_min, Float t_max, HitRecord& rec) const override;
         
     private:
         Vec3<Float> m_center;
         Float m_radius;
-        std::unique_ptr<Material> m_material;
+        std::shared_ptr<Material> m_material;
     };
 }
 

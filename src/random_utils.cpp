@@ -14,4 +14,14 @@ namespace RT
             }
         }
     }
+
+    Vec3<Float> RandomInUnitDisk()
+    {
+        auto& gen = RandomGen<Float>::Inst();
+        Vec3<Float> p;
+        do {
+            p = (Float)2.0 * Vec3<Float>(gen(0.0, 1.0), gen(0.0, 1.0), 0.0);
+        } while (Dot(p,p) >= 1.0);
+        return p;
+    }
 }
