@@ -67,6 +67,16 @@ namespace RT
             return *this;
         }
 
+        inline Vec3& operator *= (const Vec3& o)
+        {
+            m_x *= o.m_x;
+            m_y *= o.m_y;
+            m_z *= o.m_z;
+
+            return *this;
+        }
+
+
         inline Vec3& operator /= (T t)
         {
             m_x /= t;

@@ -47,6 +47,40 @@ Vector3 Color(const Ray& r, Hitable* world, int depth)
     }
 }
 
+Vector3 ColorNonRecursive(Ray ray, Hitable* world, int maxDepth)
+{
+    Ray scattered;
+    HitRecord rec;
+    Vector3 attenuation;
+    Vector3 combinedColor(1.0f, 1.0f, 1.0f);
+    for (int i = maxDepth; i >= 0; i--)
+    {
+        if (world->Hit(ray, 0.001, std::numeric_limits<Float>::max(), rec))
+        {
+            if (rec.Mat->Scatter(ray, rec, attenuation, scattered))
+            {
+                combinedColor *= attenuation;
+                ray = scattered;
+            }
+            else
+            {
+                // black
+                combinedColor = Vector3();
+                break;
+            }
+        }
+        else
+        {
+            Vector3 unitDirection = ray.Direction().Normalize();
+            float t = 0.5f * (unitDirection.y() + 1.0f);
+            combinedColor *= (1.0f - t) * Vector3(1.0f, 1.0f, 1.0f) + t * Vector3(0.5f, 0.7f, 1.0f);
+            break;
+        }
+    }
+
+    return combinedColor;
+}
+
 std::unique_ptr<HitableList> MakeWorld()
 {
     int n = 500;
@@ -103,8 +137,8 @@ std::unique_ptr<HitableList> MakeWorld()
 
 int main()
 {
-    int imageWidth = 2560;
-    int imageHeight = 1440;
+    int imageWidth = 200;//2560;
+    int imageHeight = 100;//1440;
     int samplesPerPixel = 10;
     int maxDepth = 50;
 
@@ -130,7 +164,7 @@ int main()
 
     for(int j = imageHeight-1; j >= 0; j--)
     {
-        std::cerr << "Scanlines remaining: " << j << std::endl;
+        //std::cerr << "Scanlines remaining: " << j << std::endl;
         for (int i = 0; i < imageWidth; i++)
         {
             Vector3 col;
@@ -139,7 +173,8 @@ int main()
                 float u = float(i + dist(mt)) / float(imageWidth-1);
                 float v = float(j + dist(mt)) / float(imageHeight-1);
                 auto r = cam.GetRay(u, v);
-                col += Color(r, &world, maxDepth);
+                col += ColorNonRecursive(r, &world, maxDepth);
+                //col += Color(r, &world, maxDepth);
             }
             col /= float(samplesPerPixel);
             col = Vector3(sqrt(col[0]), sqrt(col[1]), sqrt(col[2]));
@@ -152,5 +187,5 @@ int main()
     }
 
     auto end = std::chrono::high_resolution_clock::now();
-    std::cerr << "Duration: " << std::chrono::duration_cast<std::chrono::seconds>(end-start).count() << std::endl;
+    std::cerr << "Duration: " << std::chrono::duration_cast<std::chrono::seconds>(end-start).count() << " seconds" << std::endl;
 }
