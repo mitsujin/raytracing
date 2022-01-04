@@ -137,9 +137,9 @@ std::unique_ptr<HitableList> MakeWorld()
 
 int main()
 {
-    int imageWidth = 200;//2560;
-    int imageHeight = 100;//1440;
-    int samplesPerPixel = 10;
+    int imageWidth = 1400;
+    int imageHeight = 933;
+    int samplesPerPixel = 100;
     int maxDepth = 50;
 
     std::cout << "P3\n" << imageWidth << " " << imageHeight << "\n255\n";
@@ -173,8 +173,8 @@ int main()
                 float u = float(i + dist(mt)) / float(imageWidth-1);
                 float v = float(j + dist(mt)) / float(imageHeight-1);
                 auto r = cam.GetRay(u, v);
-                col += ColorNonRecursive(r, &world, maxDepth);
-                //col += Color(r, &world, maxDepth);
+                //col += ColorNonRecursive(r, &world, maxDepth);
+                col += Color(r, &world, maxDepth);
             }
             col /= float(samplesPerPixel);
             col = Vector3(sqrt(col[0]), sqrt(col[1]), sqrt(col[2]));
