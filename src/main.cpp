@@ -159,7 +159,7 @@ int main()
 
     Camera cam(lookFrom, lookAt, Vector3(0,1,0), 20.0f, Float(imageWidth) / Float(imageHeight), aperture, distToFocus);
     std::random_device rd;
-    std::mt19937 mt(rd());
+    std::minstd_rand mt(rd());
     std::uniform_real_distribution<Float> dist(0.0f, 1.0f);
 
     auto start = std::chrono::high_resolution_clock::now();
