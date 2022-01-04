@@ -137,10 +137,12 @@ std::unique_ptr<HitableList> MakeWorld()
 
 int main()
 {
-    int imageWidth = 1400;
-    int imageHeight = 933;
+    int imageWidth = 200;//1400;
+    int imageHeight = 100;//933;
     int samplesPerPixel = 100;
     int maxDepth = 50;
+
+    int imageBuffer[imageWidth * imageHeight * 3];
 
     std::cout << "P3\n" << imageWidth << " " << imageHeight << "\n255\n";
     Vector3 vertical(0.0f, 2.0f, 0.0f);
@@ -161,6 +163,7 @@ int main()
     std::uniform_real_distribution<Float> dist(0.0f, 1.0f);
 
     auto start = std::chrono::high_resolution_clock::now();
+    auto stride = imageWidth * 3;
 
     for(int j = imageHeight-1; j >= 0; j--)
     {
@@ -182,7 +185,19 @@ int main()
             int ig = int(255.99*col.g());
             int ib = int(255.99*col.b());
 
-            std::cout << ir << " " << ig << " " << ib << "\n";
+            imageBuffer[j*stride + i*3] = ir;
+            imageBuffer[j*stride + i*3+1] = ig;
+            imageBuffer[j*stride + i*3+2] = ib;
+            //std::cout << (j*imageWidth + i) << "," << ir << " " << ig << " " << ib << "\n";
+        }
+    }
+    std::cout << "\n";
+
+    for (int j = imageHeight-1; j>= 0; j--)
+    {
+        for (int i = 0; i < imageWidth; i++)
+        {
+            std::cout << imageBuffer[j*stride + i*3] << " " << imageBuffer[j*stride + i*3+1] << " " << imageBuffer[j*stride + i*3+2] << "\n";
         }
     }
 
