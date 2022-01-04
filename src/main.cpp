@@ -137,12 +137,12 @@ std::unique_ptr<HitableList> MakeWorld()
 
 int main()
 {
-    int imageWidth = 200;//1400;
-    int imageHeight = 100;//933;
+    int imageWidth = 1400;
+    int imageHeight = 933;
     int samplesPerPixel = 100;
     int maxDepth = 50;
 
-    int imageBuffer[imageWidth * imageHeight * 3];
+    int* imageBuffer = new int[imageWidth * imageHeight * 3];
 
     std::cout << "P3\n" << imageWidth << " " << imageHeight << "\n255\n";
     Vector3 vertical(0.0f, 2.0f, 0.0f);
@@ -165,9 +165,9 @@ int main()
     auto start = std::chrono::high_resolution_clock::now();
     auto stride = imageWidth * 3;
 
+    #pragma omp parallel for num_threads(24)
     for(int j = imageHeight-1; j >= 0; j--)
     {
-        //std::cerr << "Scanlines remaining: " << j << std::endl;
         for (int i = 0; i < imageWidth; i++)
         {
             Vector3 col;
@@ -176,8 +176,8 @@ int main()
                 float u = float(i + dist(mt)) / float(imageWidth-1);
                 float v = float(j + dist(mt)) / float(imageHeight-1);
                 auto r = cam.GetRay(u, v);
-                //col += ColorNonRecursive(r, &world, maxDepth);
-                col += Color(r, &world, maxDepth);
+                col += ColorNonRecursive(r, &world, maxDepth);
+                //col += Color(r, &world, maxDepth);
             }
             col /= float(samplesPerPixel);
             col = Vector3(sqrt(col[0]), sqrt(col[1]), sqrt(col[2]));
@@ -191,7 +191,6 @@ int main()
             //std::cout << (j*imageWidth + i) << "," << ir << " " << ig << " " << ib << "\n";
         }
     }
-    std::cout << "\n";
 
     for (int j = imageHeight-1; j>= 0; j--)
     {

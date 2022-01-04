@@ -10,6 +10,8 @@ set (SOURCE
     random_utils.cpp
 )
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
+
 add_executable(${BINARY} ${SOURCE})
 add_library(${BINARY}_lib STATIC ${SOURCE})
 
